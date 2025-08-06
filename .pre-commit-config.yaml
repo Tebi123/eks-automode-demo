@@ -1,0 +1,50 @@
+# .pre-commit-config.yaml
+repos:
+  # Terraform formatting and validation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.1
+    hooks:
+      - id: terraform_fmt
+        name: Terraform fmt
+        description: Rewrites Terraform files to canonical format
+      - id: terraform_validate
+        name: Terraform validate
+        description: Validates Terraform files
+      - id: terraform_tflint
+        name: Terraform lint
+        description: Linter for Terraform files
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+      - id: terraform_docs
+        name: Terraform docs
+        description: Generates documentation from Terraform modules
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+
+  # Security scanning
+  - repo: https://github.com/aquasecurity/tfsec
+    rev: v1.28.11
+    hooks:
+      - id: tfsec
+        name: tfsec
+        description: Security scanner for Terraform files
+        args:
+          - --soft-fail
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+        name: Fix End of Files
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+      - id: check-yaml
+        name: Check YAML
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+      - id: detect-private-key
+        name: Detect Private Keys
